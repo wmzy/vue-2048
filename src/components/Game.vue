@@ -77,13 +77,15 @@ export default {
 
       await delay(moveTime);
       if (removeSet.size) {
-        // FIXME: remove multi numbers in one tick maybe result in node move
-        this.numbers = this.numbers.filter(n => !removeSet.has(n));
+        // eslint-disable-next-line no-restricted-syntax
+        for (const n of removeSet) {
+          this.numbers.splice(this.numbers.indexOf(n), 1);
+          // remove and add in one tick result in dom node move
+          // eslint-disable-next-line no-await-in-loop
+          await this.$nextTick();
+        }
         // eslint-disable-next-line no-param-reassign, no-return-assign
         doubleSet.forEach(n => (n.value *= 2));
-
-        // remove and add in one tick result in dom node move
-        await this.$nextTick();
       }
       this.addNumber();
       await delay(doubleTime);
