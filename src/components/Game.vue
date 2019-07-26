@@ -3,6 +3,7 @@
     <div
      v-for="n in numbers"
      :key="n.key"
+     :k="n.key"
      :value="n.value"
      :x="n.x"
      :y="n.y"
@@ -126,9 +127,11 @@ export default {
 
   @keyframes fadeIn {
     0% {
+      transform: scale(0);
       opacity: 0;
     }
     100% {
+      transform: scale(1);
       opacity: 1;
     }
   }
