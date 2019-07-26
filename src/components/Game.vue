@@ -77,9 +77,13 @@ export default {
 
       await delay(moveTime);
       if (removeSet.size) {
+        // FIXME: remove multi numbers in one tick maybe result in node move
         this.numbers = this.numbers.filter(n => !removeSet.has(n));
         // eslint-disable-next-line no-param-reassign, no-return-assign
         doubleSet.forEach(n => (n.value *= 2));
+
+        // remove and add in one tick result in dom node move
+        await this.$nextTick();
       }
       this.addNumber();
       await delay(doubleTime);
@@ -122,6 +126,9 @@ export default {
   height: 40rem;
   position: relative;
   border: 1px solid black;
+  color: white;
+  font-weight: bolder;
+  font-size: 2rem;
 
   $size: 8rem;
 
@@ -142,6 +149,10 @@ export default {
     width: $size;
     height: $size;
     animation: fadeIn 0.5s;
+    line-height: $size;
+    padding: 0.2rem;
+    box-sizing: border-box;
+    background-clip: content-box;
 
     $colors:
       2 yellow, 4 green, 8 blue, 16 yellowgreen, 32 orange,
@@ -149,7 +160,7 @@ export default {
 
     @each $number, $color in $colors {
       &[value="#{$number}"] {
-        background: $color;
+        background-color: $color;
       }
     }
 
