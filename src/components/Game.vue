@@ -9,6 +9,7 @@
      :y="n.y"
      :class="s.numbers"
     >{{ n.value }}</div>
+    <div v-if="over" key="over" :class="s.over">Game Over!</div>
   </transition-group>
 </template>
 
@@ -27,6 +28,7 @@ export default {
   name: 'Grid2048',
   data() {
     return {
+      over: false,
       numbers: [],
     };
   },
@@ -84,7 +86,7 @@ export default {
       this.addNumber();
       await delay(doubleTime);
       if (this.canMove()) window.addEventListener('keydown', this.move);
-      else console.log('game over');
+      else this.over = true;
     },
     addNumber() {
       let points = _.range(size * size);
@@ -172,6 +174,14 @@ export default {
         top: $i * $size
       }
     }
+  }
+
+  .over {
+    width: 100%;
+    height: 100%;
+    font-size: 4rem;
+    line-height: 40rem;
+    color: red;
   }
 }
 </style>
