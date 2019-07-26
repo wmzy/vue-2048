@@ -1,5 +1,5 @@
 <template>
-  <div :class="s.container">
+  <transition-group tag="div" :class="s.container" :leave-active-class="s.leave">
     <div
      v-for="n in numbers"
      :key="n.key"
@@ -9,7 +9,7 @@
      :y="n.y"
      :class="s.numbers"
     >{{ n.value }}</div>
-  </div>
+  </transition-group>
 </template>
 
 <script>
@@ -77,13 +77,7 @@ export default {
 
       await delay(moveTime);
       if (removeSet.size) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const n of removeSet) {
-          this.numbers.splice(this.numbers.indexOf(n), 1);
-          // remove and add in one tick result in dom node move
-          // eslint-disable-next-line no-await-in-loop
-          await this.$nextTick();
-        }
+        this.numbers = this.numbers.filter(n => !removeSet.has(n));
         // eslint-disable-next-line no-param-reassign, no-return-assign
         doubleSet.forEach(n => (n.value *= 2));
       }
@@ -123,6 +117,10 @@ export default {
 </script>
 
 <style module="s" lang="scss">
+  .leave {
+    display: none;
+  }
+
 .container {
   width: 40rem;
   height: 40rem;
